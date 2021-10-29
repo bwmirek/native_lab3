@@ -1,0 +1,21 @@
+node_modules/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# macOS
+.DS_Store
+
+# ide
+/.idea
+
+# Expo
+.expo
+__generated__
+web-build
