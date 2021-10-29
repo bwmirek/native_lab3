@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const Button = (props) => {
   const style = props.orange ? styles.orangeButton : styles.grayButton;
+  const buttonStyle = props.orientation === 'PORTRAIT' ? styles.button : styles.landscapeButton;
+  const largeButtonStyle = props.orientation === 'PORTRAIT' ? styles.largeButton : styles.largeLandscapeButton;
 
   return (
-    <TouchableOpacity onPress={props.onPress} style={props.zeroButton ? styles.largeButton : styles.button}>
+    <TouchableOpacity onPress={props.onPress} style={props.zeroButton ? largeButtonStyle : buttonStyle}>
       <View style={[styles.innerButton, style]}>
         <Text style={style}>
           {props.label}
@@ -20,6 +22,18 @@ const App = () => {
   const [b, setB] = useState('');
   const [sign, setSign] = useState(undefined);
   const [result, setResult] = useState(0);
+  const [orientation, setOrientation] = useState('PORTRAIT');
+
+  useEffect(() => {
+    Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+      if (width < height) {
+        setOrientation('PORTRAIT');
+      } else {
+        setOrientation('LANDSCAPE');
+      }
+    });
+
+  }, []);
 
   const clear = () => {
     setA('');
@@ -83,6 +97,83 @@ const App = () => {
     }
   };
 
+  const PortraitBoard = () => (
+    <>
+      <View style={styles.row}>
+        <Button orientation={orientation} label={'AC'} onPress={() => clear()} orange/>
+        <View style={styles.gap}/>
+        <Button orientation={orientation} label={'÷'} onPress={() => setSign('/')} orange/>
+      </View>
+      <View style={styles.row}>
+        <Button orientation={orientation} label={'7'} onPress={() => push('7')}/>
+        <Button orientation={orientation} label={'8'} onPress={() => push('8')}/>
+        <Button orientation={orientation} label={'9'} onPress={() => push('9')}/>
+        <Button orientation={orientation} label={'×'} onPress={() => setSign('x')} orange/>
+      </View>
+      <View style={styles.row}>
+        <Button orientation={orientation} label={'4'} onPress={() => push('4')}/>
+        <Button orientation={orientation} label={'5'} onPress={() => push('5')}/>
+        <Button orientation={orientation} label={'6'} onPress={() => push('6')}/>
+        <Button orientation={orientation} label={'-'} onPress={() => setSign('-')} orange/>
+      </View>
+      <View style={styles.row}>
+        <Button orientation={orientation} label={'1'} onPress={() => push('1')}/>
+        <Button orientation={orientation} label={'2'} onPress={() => push('2')}/>
+        <Button orientation={orientation} label={'3'} onPress={() => push('3')}/>
+        <Button orientation={orientation} label={'+'} onPress={() => setSign('+')} orange/>
+      </View>
+      <View style={styles.row}>
+        <Button orientation={orientation} label={'0'} zeroButton onPress={() => push('0')}/>
+        <Button orientation={orientation} label={'.'} onPress={() => push('.')}/>
+        <Button orientation={orientation} label={'='} onPress={() => calculate()} orange/>
+      </View>
+    </>
+  );
+
+  const LandscapeBoard = () => (
+    <>
+      <View style={styles.rowLandscape}>
+        <Button orientation={orientation} label={'x/y'} onPress={() => clear()} orange/>
+        <Button orientation={orientation} label={'x!'} onPress={() => clear()} orange/>
+        <Button orientation={orientation} label={'AC'} onPress={() => clear()} orange/>
+        <Button orientation={orientation} label={'+/-'} onPress={() => clear()} orange/>
+        <Button orientation={orientation} label={'%'} onPress={() => clear()} orange/>
+        <Button orientation={orientation} label={'÷'} onPress={() => setSign('/')} orange/>
+      </View>
+      <View style={styles.rowLandscape}>
+        <Button orientation={orientation} label={'e^x'} onPress={() => push('7')} orange/>
+        <Button orientation={orientation} label={'10^x'} onPress={() => push('7')} orange/>
+        <Button orientation={orientation} label={'7'} onPress={() => push('7')}/>
+        <Button orientation={orientation} label={'8'} onPress={() => push('8')}/>
+        <Button orientation={orientation} label={'9'} onPress={() => push('9')}/>
+        <Button orientation={orientation} label={'×'} onPress={() => setSign('x')} orange/>
+      </View>
+      <View style={styles.rowLandscape}>
+        <Button orientation={orientation} label={'ln'} onPress={() => push('7')} orange/>
+        <Button orientation={orientation} label={'log10'} onPress={() => push('7')} orange/>
+        <Button orientation={orientation} label={'4'} onPress={() => push('4')}/>
+        <Button orientation={orientation} label={'5'} onPress={() => push('5')}/>
+        <Button orientation={orientation} label={'6'} onPress={() => push('6')}/>
+        <Button orientation={orientation} label={'-'} onPress={() => setSign('-')} orange/>
+      </View>
+      <View style={styles.rowLandscape}>
+        <Button orientation={orientation} label={'e'} onPress={() => push('7')} orange/>
+        <Button orientation={orientation} label={'x^2'} onPress={() => push('7')} orange/>
+        <Button orientation={orientation} label={'1'} onPress={() => push('1')}/>
+        <Button orientation={orientation} label={'2'} onPress={() => push('2')}/>
+        <Button orientation={orientation} label={'3'} onPress={() => push('3')}/>
+        <Button orientation={orientation} label={'+'} onPress={() => setSign('+')} orange/>
+      </View>
+      <View style={styles.rowLandscape}>
+        <Button orientation={orientation} label={'Π'} onPress={() => push('7')} orange/>
+        <Button orientation={orientation} label={'x^3'} onPress={() => push('7')} orange/>
+        <Button orientation={orientation} label={'0'} onPress={() => push('0')} zeroButton/>
+        <Button orientation={orientation} label={'.'} onPress={() => push('.')}/>
+        <Button orientation={orientation} label={'='} onPress={() => calculate()} orange/>
+      </View>
+    </>
+  );
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.result}>
@@ -90,34 +181,7 @@ const App = () => {
           {generateResult()}
         </Text>
       </View>
-      <View style={styles.row}>
-        <Button label={'AC'} onPress={() => clear()} orange/>
-        <View style={styles.gap}/>
-        <Button label={'÷'} onPress={() => setSign('/')} orange/>
-      </View>
-      <View style={styles.row}>
-        <Button label={'7'} onPress={() => push('7')}/>
-        <Button label={'8'} onPress={() => push('8')}/>
-        <Button label={'9'} onPress={() => push('9')}/>
-        <Button label={'×'} onPress={() => setSign('x')} orange/>
-      </View>
-      <View style={styles.row}>
-        <Button label={'4'} onPress={() => push('4')}/>
-        <Button label={'5'} onPress={() => push('5')}/>
-        <Button label={'6'} onPress={() => push('6')}/>
-        <Button label={'-'} onPress={() => setSign('-')} orange/>
-      </View>
-      <View style={styles.row}>
-        <Button label={'1'} onPress={() => push('1')}/>
-        <Button label={'2'} onPress={() => push('2')}/>
-        <Button label={'3'} onPress={() => push('3')}/>
-        <Button label={'+'} onPress={() => setSign('+')} orange/>
-      </View>
-      <View style={styles.row}>
-        <Button label={'0'} zeroButton onPress={() => push('0')}/>
-        <Button label={'.'} onPress={() => push('.')}/>
-        <Button label={'='} onPress={() => calculate()} orange/>
-      </View>
+      {orientation === 'PORTRAIT' ? <PortraitBoard/> : <LandscapeBoard/>}
     </View>
   );
 };
@@ -140,7 +204,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     paddingRight: '10%',
-    paddingTop: '10%',
   },
   resultText: {
     fontSize: 64,
@@ -154,12 +217,22 @@ const styles = StyleSheet.create({
     height: '14%',
     width: '100%',
   },
+  rowLandscape: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: '14%',
+    width: '100%',
+  },
   gap: {
     width: '48.66%',
     backgroundColor: '#e18e2f',
   },
   button: {
     width: '23%',
+  },
+  landscapeButton: {
+    width: '16%',
   },
   innerButton: {
     display: 'flex',
@@ -168,6 +241,11 @@ const styles = StyleSheet.create({
   },
   largeButton: {
     width: '48.66%',
+    display: 'flex',
+    height: '100%',
+  },
+  largeLandscapeButton: {
+    width: '33%',
     display: 'flex',
     height: '100%',
   },
