@@ -97,35 +97,129 @@ const App = () => {
     }
   };
 
+  const boardButtons = [
+    {
+      type: 'BUTTON',
+      label: 'AC',
+      color: 'ORANGE',
+      action: () => () => clear(),
+      visibility: 'ALL'
+    },
+    {
+      type: 'GAP',
+      visibility: 'PORTRAIT'
+    },
+    {
+      type: 'BUTTON',
+      label: '÷',
+      color: 'ORANGE',
+      action: () => () => setSign('/'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '7',
+      color: 'ORANGE',
+      action: () => () => push('7'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '8',
+      color: 'ORANGE',
+      action: () => () => push('8'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '9',
+      color: 'ORANGE',
+      action: () => () => push('9'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '×',
+      color: 'ORANGE',
+      action: () => () => setSign('x'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '4',
+      color: 'ORANGE',
+      action: () => () => push('7'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '5',
+      color: 'ORANGE',
+      action: () => () => push('8'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '6',
+      color: 'ORANGE',
+      action: () => () => push('9'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '×',
+      color: 'ORANGE',
+      action: () => () => setSign('x'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '1',
+      color: 'ORANGE',
+      action: () => () => push('7'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '2',
+      color: 'ORANGE',
+      action: () => () => push('8'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '3',
+      color: 'ORANGE',
+      action: () => () => push('9'),
+      visibility: 'ALL'
+    },
+    {
+      type: 'BUTTON',
+      label: '×',
+      color: 'ORANGE',
+      action: () => () => setSign('x'),
+      visibility: 'ALL'
+    },
+  ];
+
+  const BoardButton = (props) => {
+    if (props.config.type === 'GAP') return <View style={styles.gap}/>;
+    if (props.config.type === 'BUTTON') return (
+      <Button
+        orientation={orientation}
+        label={props.config.label}
+        onPress={props.config.action}
+        orange={props.config.color === 'ORANGE'}
+      />
+    );
+
+    return <></>;
+  };
+
   const PortraitBoard = () => (
     <>
       <View style={styles.row}>
-        <Button orientation={orientation} label={'AC'} onPress={() => clear()} orange/>
-        <View style={styles.gap}/>
-        <Button orientation={orientation} label={'÷'} onPress={() => setSign('/')} orange/>
-      </View>
-      <View style={styles.row}>
-        <Button orientation={orientation} label={'7'} onPress={() => push('7')}/>
-        <Button orientation={orientation} label={'8'} onPress={() => push('8')}/>
-        <Button orientation={orientation} label={'9'} onPress={() => push('9')}/>
-        <Button orientation={orientation} label={'×'} onPress={() => setSign('x')} orange/>
-      </View>
-      <View style={styles.row}>
-        <Button orientation={orientation} label={'4'} onPress={() => push('4')}/>
-        <Button orientation={orientation} label={'5'} onPress={() => push('5')}/>
-        <Button orientation={orientation} label={'6'} onPress={() => push('6')}/>
-        <Button orientation={orientation} label={'-'} onPress={() => setSign('-')} orange/>
-      </View>
-      <View style={styles.row}>
-        <Button orientation={orientation} label={'1'} onPress={() => push('1')}/>
-        <Button orientation={orientation} label={'2'} onPress={() => push('2')}/>
-        <Button orientation={orientation} label={'3'} onPress={() => push('3')}/>
-        <Button orientation={orientation} label={'+'} onPress={() => setSign('+')} orange/>
-      </View>
-      <View style={styles.row}>
-        <Button orientation={orientation} label={'0'} zeroButton onPress={() => push('0')}/>
-        <Button orientation={orientation} label={'.'} onPress={() => push('.')}/>
-        <Button orientation={orientation} label={'='} onPress={() => calculate()} orange/>
+        {boardButtons.map((value, index) => <BoardButton key={index} config={value}/>)}
       </View>
     </>
   );
@@ -214,7 +308,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: '14%',
+    flexWrap: 'wrap',
+    height: '78%',
     width: '100%',
   },
   rowLandscape: {
